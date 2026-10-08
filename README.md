@@ -1,5 +1,12 @@
 # ZENTRO Website
 
-Official website for the ZENTRO Discord Economy Bot.
+واجهة عربية ثابتة وهادئة لبوت اقتصاد Discord باسم ZENTRO.
 
-The site is an Arabic, dark, calm static frontend prototype.
+> الإحصائيات وروابط Discord الحالية تجريبية. استبدل `YOUR_CLIENT_ID` والبيانات التجريبية قبل الإطلاق.
+
+## Pages
+
+- `index.html` — الرئيسية
+- `features.html` — المميزات
+- `commands.html` — الأوامر
+- `support.html` — الدعم
