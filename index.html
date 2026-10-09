@@ -7,41 +7,74 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<main class="landing">
-  <div class="logo">Z</div>
-  <h1>ZENTRO</h1>
-  <p class="desc">اجمع ZC، احفظها في البنك، وحوّلها لأصحابك بسهولة.</p>
+<div class="glow"></div>
 
-  <div class="buttons">
-    <a class="btn primary" href="/profile.html">تسجيل الدخول</a>
-    <a class="btn ghost" id="invite" target="_blank" rel="noopener">إضافة البوت للسيرفر</a>
-  </div>
+<main>
+  <header>
+    <div class="brand">
+      <div class="mark">Z</div>
+      <span>ZENTRO</span>
+    </div>
+    <a class="login-link" href="/profile.html">تسجيل الدخول</a>
+  </header>
+
+  <section class="hero">
+    <div class="badge">Discord Economy Bot</div>
+    <h1>اصنع <span>ثروتك</span><br>داخل ديسكورد</h1>
+    <p>
+      ZENTRO بوت اقتصاد متكامل يتيح لك جمع العملات، حفظها في البنك،
+      وتحويلها لأصدقائك بسهولة وأمان.
+    </p>
+
+    <div class="actions">
+      <a class="btn primary" href="/profile.html">
+        تسجيل الدخول بـ Discord
+      </a>
+      <a class="btn ghost" id="invite" target="_blank" rel="noopener">
+        إضافة البوت للسيرفر
+      </a>
+    </div>
+  </section>
 
   <section class="stats">
-    <div class="stat"><span>السيرفرات</span><b id="guilds">—</b></div>
-    <div class="stat"><span>الأعضاء</span><b id="users">—</b></div>
-    <div class="stat"><span>إجمالي ZC</span><b id="coins">—</b></div>
-    <div class="stat"><span>حالة البوت</span><b id="status">—</b></div>
+    <div class="card">
+      <span>السيرفرات</span>
+      <strong id="guilds">—</strong>
+    </div>
+    <div class="card">
+      <span>الأعضاء</span>
+      <strong id="users">—</strong>
+    </div>
+    <div class="card">
+      <span>إجمالي ZC</span>
+      <strong id="coins">—</strong>
+    </div>
+    <div class="card">
+      <span>حالة البوت</span>
+      <strong id="status">—</strong>
+    </div>
   </section>
 </main>
 
 <script src="config.js"></script>
 <script>
-  document.getElementById('invite').href = window.ZENTRO_CONFIG.INVITE_URL;
+  const invite = document.getElementById('invite');
+  invite.href = window.ZENTRO_CONFIG.INVITE_URL;
 
-  async function load() {
+  async function loadStats() {
     try {
-      const r = await fetch(window.ZENTRO_CONFIG.API_BASE + '/api/stats');
-      const s = await r.json();
-      guilds.textContent = s.guilds.toLocaleString();
-      users.textContent = s.users.toLocaleString();
-      coins.textContent = s.totalCoins.toLocaleString() + ' ZC';
-      status.textContent = s.botStatus === 'online' ? 'Online' : 'Offline';
-    } catch (e) {
-      status.textContent = 'Offline';
+      const res = await fetch(window.ZENTRO_CONFIG.API_BASE + '/api/stats');
+      const data = await res.json();
+      document.getElementById('guilds').textContent = data.guilds.toLocaleString();
+      document.getElementById('users').textContent = data.users.toLocaleString();
+      document.getElementById('coins').textContent = data.totalCoins.toLocaleString();
+      document.getElementById('status').textContent = data.botStatus === 'online' ? 'Online' : 'Offline';
+    } catch (error) {
+      document.getElementById('status').textContent = 'Offline';
     }
   }
-  load();
+
+  loadStats();
 </script>
 </body>
 </html>
