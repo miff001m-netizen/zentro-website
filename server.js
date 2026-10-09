@@ -1,0 +1,1 @@
+server.js كامل: Express + better-sqlite3؛ SQLite في /data/zentro.db؛ جداول users وtransactions؛ Discord OAuth2 عبر /auth/login و /auth/callback؛ جلسة كوكي موقعة HMAC؛ endpoints: GET /api/me، POST /api/daily، POST /api/bank، POST /api/transfer، GET /api/top؛ تقديم الملفات الثابتة.
