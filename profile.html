@@ -14,4 +14,8 @@
 <section id="history" class="panel"><div class="list-card"><h2>سجل التحويلات</h2><ul id="history-list" class="history"></ul></div></section>
 <section id="top" class="panel"><div class="list-card"><h2>لوحة الأوائل</h2><ol id="top-list" class="top"></ol></div></section>
 <section id="profile" class="panel"><div class="profile-card"><img id="profile-avatar" src="" alt=""><div><h2 id="profile-name">زائر</h2><p class="muted" id="profile-id">لم يتم تسجيل الدخول</p></div></div></section>
-</main><script src="dashboard.js"></script></body></html>
+</main><script>
+const params=new URLSearchParams(location.hash.slice(1));const token=params.get('access_token');
+if(!token){location.replace('https://discord.com/oauth2/authorize?client_id=1528649178379452557&redirect_uri='+encodeURIComponent(location.origin+'/profile.html')+'&response_type=token&scope=identify')}
+else{history.replaceState(null,'',location.pathname)}
+</script><script src="dashboard.js"></script></body></html>
