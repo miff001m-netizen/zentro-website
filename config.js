@@ -1,0 +1,1 @@
+window.ZENTRO_CONFIG = { API_BASE: 'http://localhost:3000', DISCORD_CLIENT_ID: 'YOUR_DISCORD_CLIENT_ID', REDIRECT_URI: window.location.origin + '/profile.html' };
