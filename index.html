@@ -1,1 +1,47 @@
-<!DOCTYPE html><html lang=ar dir=rtl><head><meta charset=UTF-8><meta name=viewport content='width=device-width, initial-scale=1'><title>ZENTRO</title><link rel=stylesheet href=styles.css></head><body><header><div class=logo>ZENTRO</div><nav><a href=/>الرئيسية</a><a href=/profile.html>حسابي</a><a href=/leaderboard.html>Top 100</a><a href=/commands.html>الأوامر</a></nav></header><main><section class=hero><h1>ZENTRO Economy Bot</h1><p>اجمع العملات، احفظها في البنك، وحوّلها لأصحابك.</p><a class=btn href=/profile.html>ادخل لحسابك</a></section><section class=stats><div class=card><h3>الأعضاء</h3><p id=stat-users>—</p></div><div class=card><h3>إجمالي ZC</h3><p id=stat-coins>—</p></div><div class=card><h3>التحويلات</h3><p id=stat-transfers>—</p></div><div class=card><h3>حالة البوت</h3><p id=stat-status>—</p></div></section><section class=panel><h2>أغلى 10 أعضاء</h2><div id=top-preview></div><a href=/leaderboard.html>شوف Top 100</a></section></main><footer>ZENTRO © 2026</footer><script src=config.js></script><script src=app.js></script><script>loadStats();loadTopPreview();</script></body></html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZENTRO — Discord Economy Bot</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="landing">
+  <div class="logo">Z</div>
+  <h1>ZENTRO</h1>
+  <p class="desc">اجمع ZC، احفظها في البنك، وحوّلها لأصحابك بسهولة.</p>
+
+  <div class="buttons">
+    <a class="btn primary" href="/profile.html">تسجيل الدخول</a>
+    <a class="btn ghost" id="invite" target="_blank" rel="noopener">إضافة البوت للسيرفر</a>
+  </div>
+
+  <section class="stats">
+    <div class="stat"><span>السيرفرات</span><b id="guilds">—</b></div>
+    <div class="stat"><span>الأعضاء</span><b id="users">—</b></div>
+    <div class="stat"><span>إجمالي ZC</span><b id="coins">—</b></div>
+    <div class="stat"><span>حالة البوت</span><b id="status">—</b></div>
+  </section>
+</main>
+
+<script src="config.js"></script>
+<script>
+  document.getElementById('invite').href = window.ZENTRO_CONFIG.INVITE_URL;
+
+  async function load() {
+    try {
+      const r = await fetch(window.ZENTRO_CONFIG.API_BASE + '/api/stats');
+      const s = await r.json();
+      guilds.textContent = s.guilds.toLocaleString();
+      users.textContent = s.users.toLocaleString();
+      coins.textContent = s.totalCoins.toLocaleString() + ' ZC';
+      status.textContent = s.botStatus === 'online' ? 'Online' : 'Offline';
+    } catch (e) {
+      status.textContent = 'Offline';
+    }
+  }
+  load();
+</script>
+</body>
+</html>
