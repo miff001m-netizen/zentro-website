@@ -1,4 +1,28 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ZENTRO | Top 100</title><link rel="stylesheet" href="dashboard.css"></head><body data-page="top"><aside class="sidebar"><div class="logo">ZENTRO<span> COIN</span></div><nav><a href="profile.html">🏠 الملف الشخصي</a><a href="wallet.html">💰 المحفظة والبنك</a><a href="transfer.html">💸 التحويلات</a><a href="top.html" class="active">🏆 Top 100</a></nav><div class="user"><img id="userAvatar" width="34" height="34" alt=""><span id="userName">زائر</span><a class="btn small" href="/auth/login">دخول</a></div></aside><main class="main"><div class="page-head"><p class="eyebrow">الترتيب</p><h1>Top 100</h1><p class="muted">أفضل 100 عضو حسب إجمالي الرصيد.</p></div><section class="card"><div id="list" class="top-list"><p class="muted">جارٍ تحميل الترتيب...</p></div></section></main><script src="dashboard.js"></script><script>
-fetch('/api/top').then(r=>r.json()).then(rows=>{const list=document.getElementById('list');if(!Array.isArray(rows)||!rows.length){list.innerHTML='<p class="muted">لا يوجد أعضاء بعد.</p>';return}list.innerHTML=rows.map((u,i)=>'<div class="top-row"><span class="rank">#'+(i+1)+'</span><span class="name">'+(u.username||'عضو')+'</span><span class="amount">'+(u.total||0).toLocaleString()+' ZC</span></div>').join('')}).catch(()=>{document.getElementById('list').innerHTML='<p class="muted">تعذر تحميل الترتيب.</p>'});
-</script><style>.top-list{display:grid;gap:10px}.top-row{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #1c1c1f;border-radius:12px;background:#0b0b0e}.rank{color:#d4af37;font-weight:900;min-width:44px}.name{flex:1}.amount{color:#14b8a6;font-weight:900}</style></body></html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZENTRO | Top 100</title>
+<style>
+:root{--bg:#050507;--surface:#0b0b0e;--surface-2:#131317;--line:#1c1c1f;--text:#f5f5f7;--muted:#8a8a93;--gold:#d4af37;--teal:#14b8a6}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}.glow{position:fixed;top:-210px;left:50%;width:760px;height:760px;transform:translateX(-50%);background:radial-gradient(circle,rgba(20,184,166,.15),transparent 62%);filter:blur(54px);pointer-events:none}.glow2{position:fixed;bottom:-250px;right:-160px;width:590px;height:590px;background:radial-gradient(circle,rgba(212,175,55,.10),transparent 62%);filter:blur(62px);pointer-events:none}.app{position:relative}.topbar{display:flex;align-items:center;gap:14px;padding:15px 20px;background:rgba(11,11,14,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}.burger{width:42px;height:42px;border-radius:13px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);font-size:20px;cursor:pointer}.sidebar{position:fixed;top:0;right:0;bottom:0;width:270px;background:rgba(11,11,14,.97);backdrop-filter:blur(10px);border-left:1px solid var(--line);padding:24px 16px;display:flex;flex-direction:column;gap:6px;transform:translateX(100%);transition:.3s;z-index:20}.sidebar.open{transform:translateX(0)}.brand{font-weight:900;letter-spacing:2px}.brand span{color:var(--gold)}.sidebar .brand{margin-bottom:18px;padding:0 8px}.nav{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;color:var(--muted);text-decoration:none;font-weight:700}.nav:hover,.nav.active{background:var(--surface-2);color:var(--text)}.nav.active{color:var(--teal)}.logout{margin-top:auto;color:#f43f5e;text-decoration:none;font-weight:700;padding:12px 16px;border-radius:12px;border:1px solid var(--line);text-align:center}.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:15}.overlay.show{display:block}.main{padding:22px 18px 32px;max-width:760px;margin:0 auto}.page-head h1{font-size:24px;margin:6px 0}.muted{color:var(--muted)}.card{background:rgba(11,11,14,.94);border:1px solid var(--line);border-radius:18px;padding:18px}.row{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface);margin-bottom:10px}.rank{color:var(--gold);font-weight:900;min-width:44px}.name{flex:1;font-weight:800}.amount{color:var(--teal);font-weight:900}.empty{color:var(--muted);text-align:center;padding:18px}
+</style>
+</head>
+<body>
+<div class="glow"></div><div class="glow2"></div>
+<div class="app">
+<div class="topbar"><button class="burger" onclick="toggleSidebar()">☰</button><div class="brand">ZENTRO<span> COIN</span></div></div>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<aside class="sidebar" id="sidebar"><div class="brand">ZENTRO<span> COIN</span></div><a class="nav" href="profile.html">🏠 الرئيسية</a><a class="nav" href="transfer.html">💸 التحويلات</a><a class="nav active" href="top.html">🏆 Top 100</a><a class="logout" href="/auth/logout">تسجيل الخروج</a></aside>
+<main class="main">
+<section class="page-head"><p class="muted">الترتيب</p><h1>Top 100</h1><p class="muted">أفضل 100 عضو حسب إجمالي الرصيد.</p></section>
+<section class="card"><div id="list"><p class="empty">جارٍ تحميل الترتيب...</p></div></section>
+</main>
+</div>
+<script>
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show')}
+fetch('/api/top').then(r=>r.json()).then(rows=>{const list=document.getElementById('list');if(!Array.isArray(rows)||!rows.length){list.innerHTML='<p class="empty">لا يوجد أعضاء بعد.</p>';return}list.innerHTML=rows.map((u,i)=>'<div class="row"><span class="rank">#'+(i+1)+'</span><span class="name">'+(u.username||'عضو')+'</span><span class="amount">'+(u.total||0).toLocaleString()+' ZC</span></div>').join('')}).catch(()=>{document.getElementById('list').innerHTML='<p class="empty">تعذر تحميل الترتيب.</p>'})
+</script>
+</body>
+</html>
