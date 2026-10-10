@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZENTRO | التوب 100</title>
+<style>
+:root{--bg:#050507;--surface:#0b0b0e;--surface-2:#131317;--line:#1c1c1f;--text:#f5f5f7;--muted:#8a8a93;--gold:#d4af37;--teal:#14b8a6}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,'Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}.glow{position:fixed;top:-210px;left:50%;width:760px;height:760px;transform:translateX(-50%);background:radial-gradient(circle,rgba(20,184,166,.15),transparent 62%);filter:blur(54px);pointer-events:none}.login{min-height:100vh;display:grid;place-items:center;text-align:center;padding:24px}.card{background:rgba(11,11,14,.91);border:1px solid var(--line);border-radius:24px;padding:48px 36px;max-width:420px;width:100%}.coin{width:72px;height:72px;margin:0 auto 22px;border-radius:50%;display:grid;place-items:center;font-weight:900;color:var(--gold);background:radial-gradient(circle at 30% 30%,#1a1a1d,#0b0b0d);border:1px solid rgba(212,175,55,.45)}.logo{font-weight:900;letter-spacing:2px;margin-bottom:18px}.logo span{color:var(--gold)}h1{font-size:26px;margin-bottom:10px}p{color:var(--muted);font-size:15px;line-height:1.8;margin-bottom:28px}.btn{display:inline-block;padding:15px 30px;border-radius:14px;background:#5865f2;color:#fff;text-decoration:none;font-weight:900}.app{display:none;max-width:900px;margin:0 auto;padding:24px 16px 120px}.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}.brand{font-weight:900;letter-spacing:2px}.brand span{color:var(--gold)}.back{color:var(--muted);text-decoration:none;font-size:14px}.title{text-align:center;margin-bottom:26px}.title h1{font-size:24px}.title p{margin:0}.podium{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}.podium .p{background:rgba(11,11,14,.94);border:1px solid var(--line);border-radius:20px;padding:20px 14px;text-align:center;position:relative}.p1{border-color:rgba(212,175,55,.55);box-shadow:0 0 30px rgba(212,175,55,.12)}.p2{border-color:rgba(192,197,206,.35)}.p3{border-color:rgba(205,127,50,.4)}.medal{font-size:30px}.p img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid rgba(212,175,55,.5);margin:10px 0}.p .name{font-weight:800;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.p .coins{color:var(--gold);font-weight:900;direction:ltr}.list{display:flex;flex-direction:column;gap:10px}.row{display:flex;align-items:center;gap:12px;background:rgba(11,11,14,.94);border:1px solid var(--line);border-radius:16px;padding:12px 14px}.row .pos{width:44px;text-align:center;color:var(--muted);font-weight:800}.row img{width:42px;height:42px;border-radius:50%;object-fit:cover}.row .name{flex:1;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.row .coins{color:var(--gold);font-weight:900;direction:ltr}.me{position:fixed;bottom:0;left:0;right:0;background:rgba(11,11,14,.97);border-top:1px solid rgba(212,175,55,.4);backdrop-filter:blur(10px);padding:12px 16px;display:none}.me-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:12px}.me img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid rgba(212,175,55,.5)}.me .name{flex:1;font-weight:800}.me .coins{color:var(--gold);font-weight:900;direction:ltr}.me .rank{background:var(--surface-2);border:1px solid rgba(212,175,55,.4);color:var(--gold);border-radius:12px;padding:8px 12px;font-weight:900;white-space:nowrap}@media(max-width:640px){.podium{grid-template-columns:1fr;gap:10px}.row .pos{width:34px;font-size:13px}}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="login" id="login"><div class="card"><div class="coin">ZC</div><div class="logo">ZENTRO<span> COIN</span></div><h1>التوب 100</h1><p>سجّل الدخول لعرض ترتيبك بين أغنى أعضاء ZENTRO.</p><a class="btn" href="/auth/login">تسجيل الدخول عبر Discord</a></div></div>
+<div class="app" id="app">
+<div class="topbar"><div class="brand">ZENTRO<span> COIN</span></div><a class="back" href="/">← رجوع للبروفايل</a></div>
+<div class="title"><h1>🏆 التوب 100</h1><p>ترتيب أغنى 100 عضو في ZENTRO</p></div>
+<div class="podium" id="podium"></div>
+<div class="list" id="list"></div>
+</div>
+<div class="me" id="me"><div class="me-inner"><img id="meAvatar" src="" alt=""><div class="name" id="meName"></div><div class="coins"><span id="meCoins">0</span> ZC</div><div class="rank">ترتيبك <span id="meRank">—</span></div></div></div>
+<script>
+function medal(i){return ['🥇','🥈','🥉'][i]}
+fetch('/api/me').then(r=>r.json()).then(me=>{
+if(me.guest||!me.user){document.getElementById('login').style.display='grid';return}
+document.getElementById('login').style.display='none';document.getElementById('app').style.display='block';
+const u=me.user;document.getElementById('meAvatar').src=u.avatar||'';document.getElementById('meName').textContent=u.username||'عضو';document.getElementById('meCoins').textContent=(u.wallet+u.bank).toLocaleString();document.getElementById('meRank').textContent='#'+(me.rank||'—');document.getElementById('me').style.display='block';
+return fetch('/api/top').then(r=>r.json()).then(rows=>{
+const pod=document.getElementById('podium'),list=document.getElementById('list');
+rows.slice(0,3).forEach((u2,i)=>{pod.insertAdjacentHTML('beforeend','<div class="p p'+(i+1)+'"><div class="medal">'+medal(i)+'</div><img src="'+(u2.avatar||'')+'" alt=""><div class="name">'+(u2.username||'عضو')+'</div><div class="coins">'+(u2.total||0).toLocaleString()+' ZC</div></div>')});
+rows.slice(3).forEach((u2)=>{const n=rows.indexOf(u2)+1;list.insertAdjacentHTML('beforeend','<div class="row"><div class="pos">#'+n+'</div><img src="'+(u2.avatar||'')+'" alt=""><div class="name">'+(u2.username||'عضو')+'</div><div class="coins">'+(u2.total||0).toLocaleString()+' ZC</div></div>')});
+})
+}).catch(()=>{document.getElementById('login').style.display='grid'})
+</script>
+</body>
+</html>
