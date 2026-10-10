@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZENTRO | التحويلات</title>
+<style>
+:root{--bg:#050507;--surface:#0b0b0e;--surface-2:#131317;--line:#1c1c1f;--text:#f5f5f7;--muted:#8a8a93;--gold:#d4af37;--teal:#14b8a6;--green:#22c55e;--red:#f43f5e}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}.glow{position:fixed;top:-210px;left:50%;width:760px;height:760px;transform:translateX(-50%);background:radial-gradient(circle,rgba(20,184,166,.15),transparent 62%);filter:blur(54px);pointer-events:none}.glow2{position:fixed;bottom:-250px;right:-160px;width:590px;height:590px;background:radial-gradient(circle,rgba(212,175,55,.10),transparent 62%);filter:blur(62px);pointer-events:none}.app{position:relative}.topbar{display:flex;align-items:center;gap:14px;padding:15px 20px;background:rgba(11,11,14,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}.burger{width:42px;height:42px;border-radius:13px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);font-size:20px;cursor:pointer}.sidebar{position:fixed;top:0;right:0;bottom:0;width:270px;background:rgba(11,11,14,.97);backdrop-filter:blur(10px);border-left:1px solid var(--line);padding:24px 16px;display:flex;flex-direction:column;gap:6px;transform:translateX(100%);transition:.3s;z-index:20}.sidebar.open{transform:translateX(0)}.brand{font-weight:900;letter-spacing:2px}.brand span{color:var(--gold)}.sidebar .brand{margin-bottom:18px;padding:0 8px}.nav{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;color:var(--muted);text-decoration:none;font-weight:700}.nav:hover,.nav.active{background:var(--surface-2);color:var(--text)}.nav.active{color:var(--teal)}.logout{margin-top:auto;color:var(--red);text-decoration:none;font-weight:700;padding:12px 16px;border-radius:12px;border:1px solid var(--line);text-align:center}.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:15}.overlay.show{display:block}.main{padding:22px 18px 32px;max-width:760px;margin:0 auto}.page-head h1{font-size:24px;margin:6px 0}.muted{color:var(--muted)}.card{background:rgba(11,11,14,.94);border:1px solid var(--line);border-radius:18px;padding:18px}.tx-tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tx-tools input{background:var(--surface-2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 12px;font-size:13px;flex:1;min-width:160px}.tx-tools button{background:var(--surface-2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 12px;font-size:13px;cursor:pointer}.tx-tools button.active{border-color:var(--teal);color:var(--teal)}.tx-list{display:flex;flex-direction:column;gap:10px}.tx{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}.tx .icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:var(--surface-2)}.tx .info{flex:1;min-width:0}.tx .names{font-weight:800;font-size:14px}.tx .date{font-size:11px;color:var(--muted)}.tx .amount{font-weight:900}.green{color:var(--green)}.red{color:var(--red)}.load-more{width:100%;margin-top:12px;background:var(--surface-2);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:12px;cursor:pointer}.empty{color:var(--muted);text-align:center;padding:18px}
+</style>
+</head>
+<body>
+<div class="glow"></div><div class="glow2"></div>
+<div class="app">
+<div class="topbar"><button class="burger" onclick="toggleSidebar()">☰</button><div class="brand">ZENTRO<span> COIN</span></div></div>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<aside class="sidebar" id="sidebar"><div class="brand">ZENTRO<span> COIN</span></div><a class="nav" href="profile.html">🏠 الرئيسية</a><a class="nav active" href="transfers.html">💸 التحويلات</a><a class="logout" href="/auth/logout">تسجيل الخروج</a></aside>
+<main class="main">
+<section class="page-head"><p class="muted">سجل عملياتك</p><h1>التحويلات</h1><p class="muted">كل التحويلات اللي حوّلتها أو استلمتها.</p></section>
+<section class="card">
+<div class="tx-tools">
+<button class="active" data-type="all" onclick="setType('all',this)">الكل</button>
+<button data-type="sent" onclick="setType('sent',this)">حوّلت</button>
+<button data-type="received" onclick="setType('received',this)">استلمت</button>
+<input id="search" placeholder="بحث باسم العضو" oninput="onSearch()">
+<button onclick="exportCSV()">تصدير CSV</button>
+</div>
+<div id="txlist" class="tx-list"><p class="empty">جارٍ التحميل...</p></div>
+<button class="load-more" id="loadmore" onclick="loadMore()">تحميل المزيد</button>
+</section>
+</main>
+</div>
+<script>
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('show')}
+let uid=null;let txState={type:'all',search:'',limit:20,offset:0,rows:[]};
+function setType(t,btn){txState.type=t;txState.offset=0;txState.rows=[];document.querySelectorAll('.tx-tools button[data-type]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadTx()}
+function onSearch(){clearTimeout(window._st);window._st=setTimeout(()=>{txState.search=document.getElementById('search').value;txState.offset=0;txState.rows=[];loadTx()},300)}
+function loadMore(){txState.offset+=txState.limit;loadTx(true)}
+function loadTx(append){const p=new URLSearchParams({type:txState.type,search:txState.search,limit:txState.limit,offset:txState.offset});fetch('/api/transactions?'+p).then(r=>r.json()).then(rows=>{if(!append)txState.rows=rows;else txState.rows=txState.rows.concat(rows);render()})}
+function render(){const list=document.getElementById('txlist');if(!txState.rows.length){list.innerHTML='<p class="empty">لا توجد تحويلات.</p>';document.getElementById('loadmore').style.display='none';return}list.innerHTML=txState.rows.map(t=>{const out=t.sender===uid;const name=out?('إلى: '+(t.receiver_name||t.receiver)):('من: '+(t.sender_name||t.sender));const amount=(out?'-':'+')+(t.amount||0).toLocaleString()+' ZC';const d=new Date(t.created_at);const date=d.toLocaleDateString('ar-EG')+' – '+d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});return '<div class="tx"><div class="icon">'+(out?'📤':'📥')+'</div><div class="info"><div class="names">'+name+'</div><div class="date">'+date+'</div></div><div class="amount '+(out?'red':'green')+'">'+amount+'</div></div>'}).join('');document.getElementById('loadmore').style.display=txState.rows.length>=txState.offset+txState.limit?'block':'none'}
+function exportCSV(){const rows=txState.rows;if(!rows.length)return;const csv='type,sender,receiver,amount,date\n'+rows.map(t=>{const out=t.sender===uid;return (out?'sent':'received')+','+(t.sender_name||t.sender)+','+(t.receiver_name||t.receiver)+','+t.amount+','+t.created_at}).join('\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='transactions.csv';a.click()}
+fetch('/api/me').then(r=>r.json()).then(d=>{if(d.guest||!d.user){document.getElementById('txlist').innerHTML='<p class="empty">سجّل الدخول لعرض التحويلات.</p>';return}uid=d.user.discord_id;loadTx()})
+</script>
+</body>
+</html>
