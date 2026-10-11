@@ -17,6 +17,8 @@
 <div class="title"><h1>🏆 التوب 100</h1><p>ترتيب أغنى 100 عضو في ZENTRO</p></div>
 <div class="podium" id="podium"></div>
 <div class="list" id="list"></div>
+<div class="title" style="margin-top:40px"><h1>📊 Top XP</h1><p>أعلى 100 عضو في نقاط الخبرة</p></div>
+<div class="list" id="xplist"></div>
 </div>
 <div class="me" id="me"><div class="me-inner"><img id="meAvatar" src="" alt=""><div class="name" id="meName"></div><div class="coins"><span id="meCoins">0</span> ZC</div><div class="rank">ترتيبك <span id="meRank">—</span></div></div></div>
 <script>
@@ -29,6 +31,17 @@ return fetch('/api/top').then(r=>r.json()).then(rows=>{
 const pod=document.getElementById('podium'),list=document.getElementById('list');
 rows.slice(0,3).forEach((u2,i)=>{pod.insertAdjacentHTML('beforeend','<div class="p p'+(i+1)+'"><div class="medal">'+medal(i)+'</div><img src="'+(u2.avatar||'')+'" alt=""><div class="name">'+(u2.username||'عضو')+'</div><div class="coins">'+(u2.total||0).toLocaleString()+' ZC</div></div>')});
 rows.slice(3).forEach((u2)=>{const n=rows.indexOf(u2)+1;list.insertAdjacentHTML('beforeend','<div class="row"><div class="pos">#'+n+'</div><img src="'+(u2.avatar||'')+'" alt=""><div class="name">'+(u2.username||'عضو')+'</div><div class="coins">'+(u2.total||0).toLocaleString()+' ZC</div></div>')});
+return fetch('/api/topxp').then(r=>r.json()).then(xrows=>{
+const xpList=document.getElementById('xplist');
+xpList.innerHTML='';
+xpList.insertAdjacentHTML('beforeend','<div class="row" style="background:rgba(20,184,166,.08);border-color:rgba(20,184,166,.35)"><div class="pos">أنت</div><img src="'+(u.avatar||'')+'" alt=""><div class="name">'+(u.username||'عضو')+'</div><div class="coins">'+(u.xp||0).toLocaleString()+' XP • Level '+(u.level||1)+'</div></div>');
+xpList.insertAdjacentHTML('beforeend','<div style="height:10px"></div>');
+xpList.insertAdjacentHTML('beforeend','<div class="row"><div class="pos">#</div><div class="name" style="color:var(--muted)">الاسم</div><div class="coins">XP</div></div>');
+xpList.insertAdjacentHTML('beforeend','<div style="height:10px"></div>');
+return fetch('/api/topxp').then(r=>r.json()).then(xrows=>{
+xrows.forEach((u2,i)=>{const pos=i<3?medal(i):'#'+(i+1);xpList.insertAdjacentHTML('beforeend','<div class="row"><div class="pos">'+pos+'</div><img src="'+(u2.avatar||'')+'" alt=""><div class="name">'+(u2.username||'عضو')+'</div><div class="coins">'+(u2.xp||0).toLocaleString()+' XP • L'+(u2.level||1)+'</div></div>')});
+})
+})
 })
 }).catch(()=>{document.getElementById('login').style.display='grid'})
 </script>
