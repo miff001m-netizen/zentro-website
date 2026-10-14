@@ -1,0 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=STIX+Two+Text:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+.latin{font-family:'STIX Two Text',Georgia,serif}
+#langToggle{cursor:pointer;font-family:Inter,sans-serif;min-width:52px;text-align:center}
+.gold,.logo b,.z{font-family:'STIX Two Text',Georgia,serif}
