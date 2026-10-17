@@ -5,7 +5,7 @@
     { "src": "server.js", "use": "@vercel/node" }
   ],
   "routes": [
-    { "src": "/dashboard(?:/|\.html)?", "dest": "/dashboard.html" },
+    { "src": "/dashboard(/|[.]html)?", "dest": "/dashboard.html" },
     { "src": "/(.*)", "dest": "server.js" }
   ]
 }
