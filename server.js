@@ -10,6 +10,7 @@ const CLIENT_SECRET=process.env.DISCORD_CLIENT_SECRET||'';
 const REDIRECT_URI=process.env.DISCORD_REDIRECT_URI||'https://zentro-website-five.vercel.app/auth/callback';
 const SECRET=process.env.SESSION_SECRET;
 if(!SECRET||SECRET.length<32){throw new Error('SESSION_SECRET must be set to a random value of at least 32 characters')}
+const BOT_TOKEN=process.env.DISCORD_BOT_TOKEN||'';
 
 function sign(v){return v+'.'+crypto.createHmac('sha256',SECRET).update(v).digest('hex')}
 function readSession(req){const c=req.headers.cookie||'';const m=c.match(/(?:^|;\s*)sid=([^;]+)/);if(!m)return null;const raw=decodeURIComponent(m[1]);const separator=raw.lastIndexOf('.');if(separator<1)return null;const payload=raw.slice(0,separator);const signature=raw.slice(separator+1);if(!payload||!signature||sign(payload)!==raw)return null;try{return JSON.parse(payload)}catch(e){return null}}
@@ -34,7 +35,7 @@ app.get('/api/me',async(req,res)=>{try{const u=await getUser(req);if(!u)return r
 
 app.get('/api/transactions',auth,async(req,res)=>{try{const {data,error}=await supabase.from('transfers').select('*').or(`sender_user_id.eq.${req.user.discord_id},recipient_user_id.eq.${req.user.discord_id}`).order('created_at',{ascending:false}).limit(50);if(error)throw error;res.json(data)}catch(e){console.error(e);res.status(500).json({error:'server'})}});
 
-app.get('/api/top',auth,async(req,res)=>{try{const {data,error}=await supabase.from('users').select('discord_user_id,wallet_balance,bank_balance').order('wallet_balance',{ascending:false}).limit(100);if(error)throw error;res.json(data.map(r=>({username:r.discord_user_id,avatar:null,total:Number(r.wallet_balance||0)+Number(r.bank_balance||0)})))}catch(e){console.error(e);res.status(500).json({error:'server'})}});
+app.get('/api/top',auth,async(req,res)=>{try{const {data,error}=await supabase.from('users').select('discord_user_id,wallet_balance,bank_balance').order('wallet_balance',{ascending:false}).limit(100);if(error)throw error;const rows=data||[];const enriched=await Promise.all(rows.map(async r=>{let username=r.discord_user_id,avatar=null;if(BOT_TOKEN){try{const dr=await fetch(`https://discord.com/api/v10/users/${r.discord_user_id}`,{headers:{Authorization:`Bot ${BOT_TOKEN}`}});if(dr.ok){const du=await dr.json();username=du.global_name||du.username||username;if(du.avatar)avatar=`https://cdn.discordapp.com/avatars/${r.discord_user_id}/${du.avatar}.png`}}catch(e){}}return {username,avatar,total:Number(r.wallet_balance||0)+Number(r.bank_balance||0)}}));res.json(enriched)}catch(e){console.error(e);res.status(500).json({error:'server'})}});
 
 app.get('/api/topxp',auth,async(req,res)=>{try{const {data,error}=await supabase.from('users').select('discord_user_id,xp').order('xp',{ascending:false}).limit(100);if(error)throw error;res.json(data.map(r=>({username:r.discord_user_id,avatar:null,xp:Number(r.xp||0),level:levelFromXp(Number(r.xp||0)).level})))}catch(e){console.error(e);res.status(500).json({error:'server'})}});
 
