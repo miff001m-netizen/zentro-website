@@ -1,15 +1,16 @@
 {
   "version": 2,
   "builds": [
+    { "src": "api/index.js", "use": "@vercel/node" },
     { "src": "dashboard.html", "use": "@vercel/static" },
     { "src": "top100.html", "use": "@vercel/static" },
-    { "src": "transfers.html", "use": "@vercel/static" },
-    { "src": "server.js", "use": "@vercel/node" }
+    { "src": "transfers.html", "use": "@vercel/static" }
   ],
   "routes": [
+    { "src": "/api/(.*)", "dest": "/api/index.js" },
     { "src": "/dashboard(/|[.]html)?", "dest": "/dashboard.html" },
     { "src": "/top100", "dest": "/top100.html" },
     { "src": "/transfers", "dest": "/transfers.html" },
-    { "src": "/(.*)", "dest": "server.js" }
+    { "src": "/(.*)", "dest": "/api/index.js" }
   ]
 }
