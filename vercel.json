@@ -1,5 +1,9 @@
 {
   "version": 2,
+  "functions": {
+    "server.js": { "includeFiles": "*.{html,css,js,svg,webmanifest}" },
+    "api/index.js": { "includeFiles": "*.{html,css,js,svg,webmanifest}" }
+  },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.js" },
     { "source": "/auth/(.*)", "destination": "/api/index.js" },
