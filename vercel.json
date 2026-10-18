@@ -2,6 +2,7 @@
   "version": 2,
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.js" },
+    { "source": "/auth/(.*)", "destination": "/api/index.js" },
     { "source": "/dashboard", "destination": "/dashboard.html" },
     { "source": "/top100", "destination": "/top100.html" },
     { "source": "/transfers", "destination": "/transfers.html" }
