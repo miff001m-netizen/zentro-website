@@ -9,6 +9,7 @@
     { "source": "/auth/(.*)", "destination": "/api/index.js" },
     { "source": "/dashboard", "destination": "/dashboard.html" },
     { "source": "/top100", "destination": "/top100.html" },
-    { "source": "/transfers", "destination": "/transfers.html" }
+    { "source": "/transfers", "destination": "/transfers.html" },
+    { "source": "/store", "destination": "/store.html" }
   ]
 }
